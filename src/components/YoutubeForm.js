@@ -40,6 +40,8 @@ const YoutubeForm = () => {
     validate
   });
 
+  console.log("visited fields", formik.touched);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <div className="form-control">
@@ -48,9 +50,10 @@ const YoutubeForm = () => {
           type="text"
           id="name"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           value={formik.values.name}
         ></input>
-        {formik.errors.name ? (
+        {formik.touched.name && formik.errors.name ? (
           <div className="error">{formik.errors.name}</div>
         ) : null}
       </div>
@@ -61,9 +64,10 @@ const YoutubeForm = () => {
           type="email"
           id="email"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           value={formik.values.email}
         ></input>
-        {formik.errors.email ? (
+        {formik.touched.email && formik.errors.email ? (
           <div className="error">{formik.errors.email}</div>
         ) : null}
       </div>
@@ -74,9 +78,10 @@ const YoutubeForm = () => {
           type="text"
           id="channel"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
           value={formik.values.channel}
         ></input>
-        {formik.errors.channel ? (
+        {formik.touched.channel && formik.errors.channel ? (
           <div className="error">{formik.errors.channel}</div>
         ) : null}
       </div>
