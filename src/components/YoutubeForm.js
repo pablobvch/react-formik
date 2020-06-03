@@ -1,13 +1,19 @@
 import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import TextError from "./TextError";
 
 const initialValues = {
-  name: "",
+  name: "Pablo",
   email: "",
   channel: "",
   comments: "",
-  address: ""
+  address: "",
+  social: {
+    facebook: "",
+    twitter: ""
+  },
+  phoneNumbers: ["", ""]
 };
 
 const onSubmit = (values) => {
@@ -31,12 +37,14 @@ const YoutubeForm = () => {
         <div className="form-control">
           <label htmlFor="name">Name</label>
           <Field type="text" id="name" name="name"></Field>
-          <ErrorMessage name="name" />
+          <ErrorMessage name="name" component={TextError} />
         </div>
         <div className="form-control">
           <label htmlFor="name">Email</label>
           <Field type="email" id="email" name="email"></Field>
-          <ErrorMessage name="email" />
+          <ErrorMessage name="email">
+            {(errorMsg) => <div className="error">{errorMsg}</div>}
+          </ErrorMessage>
         </div>
 
         <div className="form-control">
@@ -68,6 +76,26 @@ const YoutubeForm = () => {
               );
             }}
           </Field>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="facebook">Facebook</label>
+          <Field type="text" id="facebook" name="social.facebook" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter</label>
+          <Field type="text" id="twitter" name="social.twitter" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="primaryPh">Primary phone number</label>
+          <Field type="text" id="primaryPh" name="phoneNumbers[0]" />
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="secundaryPh">Secundary phone number</label>
+          <Field type="text" id="secundaryPh" name="phoneNumbers[1]" />
         </div>
 
         <button type="submit">Submit</button>
