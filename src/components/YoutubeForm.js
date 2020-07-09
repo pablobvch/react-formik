@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ErrorMessage,
   FastField,
@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import TextError from "./TextError";
 
 const initialValues = {
-  name: "Pablo",
+  name: "",
   email: "",
   channel: "",
   comments: "",
@@ -24,8 +24,25 @@ const initialValues = {
   phNumbers: [""]
 };
 
-const onSubmit = (values) => {
+const savedValues = {
+  name: "Pablo Bilevich",
+  email: "pablobvch@gmail.com",
+  channel: "channel example",
+  comments: "comments example",
+  address: "Chiclana 20202",
+  social: {
+    facebook: "",
+    twitter: ""
+  },
+  phoneNumbers: ["", ""],
+  phNumbers: ["", ""]
+};
+
+const onSubmit = (values, onSubmitProps) => {
   console.log("Form data on Submitting", values);
+  console.log("onSubmitProps", onSubmitProps);
+  onSubmitProps.setSubmitting(false);
+  onSubmitProps.resetForm();
 };
 
 const validationSchema = Yup.object({
@@ -57,11 +74,14 @@ const YoutubeForm = () => {
   // que el boton de submit quede habilitado pero solo si los campos requeridos ya vienen con valores
   // por default. Ver video https://www.youtube.com/watch?v=F69AlPc0O8o&list=PLC3y8-rFHvwiPmFbtzEWjESkqBVDbdgGu&index=27
   // para recordar este tema
+  const [formValues, setFormValues] = useState(null);
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={formValues || initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      //validateOnMount
+      enableReinitialize
     >
       {(formik) => {
         console.log("Formik props", formik);
@@ -74,7 +94,7 @@ const YoutubeForm = () => {
             </div>
 
             <div className="form-control">
-              <label htmlFor="name">Email</label>
+              <label htmlFor="email">Email</label>
               <Field type="email" id="email" name="email"></Field>
               <ErrorMessage name="email">
                 {(errorMsg) => <div className="error">{errorMsg}</div>}
@@ -155,10 +175,12 @@ const YoutubeForm = () => {
                       {phNumbers.map((phNumber, index) => (
                         <div key={index}>
                           <Field name={`phNumbers[${index}]`} />
-                          <button type="button" onClick={() => remove(index)}>
-                            {" "}
-                            -{" "}
-                          </button>
+                          {index > 0 && (
+                            <button type="button" onClick={() => remove(index)}>
+                              {" "}
+                              -
+                            </button>
+                          )}
                           <button type="button" onClick={() => push(index)}>
                             {" "}
                             +{" "}
@@ -178,7 +200,7 @@ const YoutubeForm = () => {
               Validate Comments
             </button>
             <button type="button" onClick={() => formik.validateForm()}>
-              Valudate All
+              Validate All
             </button>
             <button
               type="button"
@@ -199,7 +221,15 @@ const YoutubeForm = () => {
             >
               Visit Fields
             </button>
-            <button type="submit" disabled={!(formik.dirty && formik.isValid)}>
+            {/*<button type="submit" disabled={!formik.isValid}>*/}
+            <button type="button" onClick={() => setFormValues(savedValues)}>
+              Load saved data
+            </button>
+            <button type="reset">Reset</button>
+            <button
+              type="submit"
+              disabled={!formik.isValid || formik.isSubmitting}
+            >
               Submit
             </button>
           </Form>
